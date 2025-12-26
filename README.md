@@ -25,13 +25,13 @@
 ### 安装依赖
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### 开发模式
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 应用将在 http://localhost:5173 启动
@@ -39,13 +39,13 @@ npm run dev
 ### 构建生产版本
 
 ```bash
-npm run build
+pnpm build
 ```
 
 ### 预览生产构建
 
 ```bash
-npm run preview
+pnpm preview
 ```
 
 ## 使用指南
