@@ -9,14 +9,32 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as RecommendRouteImport } from './routes/recommend'
 import { Route as NewRouteImport } from './routes/new'
+import { Route as FridgeRouteImport } from './routes/fridge'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RecipesRecipeIdRouteImport } from './routes/recipes.$recipeId'
 import { Route as EditRecipeIdRouteImport } from './routes/edit.$recipeId'
 
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RecommendRoute = RecommendRouteImport.update({
+  id: '/recommend',
+  path: '/recommend',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NewRoute = NewRouteImport.update({
   id: '/new',
   path: '/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FridgeRoute = FridgeRouteImport.update({
+  id: '/fridge',
+  path: '/fridge',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -37,45 +55,100 @@ const EditRecipeIdRoute = EditRecipeIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/fridge': typeof FridgeRoute
   '/new': typeof NewRoute
+  '/recommend': typeof RecommendRoute
+  '/settings': typeof SettingsRoute
   '/edit/$recipeId': typeof EditRecipeIdRoute
   '/recipes/$recipeId': typeof RecipesRecipeIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/fridge': typeof FridgeRoute
   '/new': typeof NewRoute
+  '/recommend': typeof RecommendRoute
+  '/settings': typeof SettingsRoute
   '/edit/$recipeId': typeof EditRecipeIdRoute
   '/recipes/$recipeId': typeof RecipesRecipeIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/fridge': typeof FridgeRoute
   '/new': typeof NewRoute
+  '/recommend': typeof RecommendRoute
+  '/settings': typeof SettingsRoute
   '/edit/$recipeId': typeof EditRecipeIdRoute
   '/recipes/$recipeId': typeof RecipesRecipeIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/new' | '/edit/$recipeId' | '/recipes/$recipeId'
+  fullPaths:
+    | '/'
+    | '/fridge'
+    | '/new'
+    | '/recommend'
+    | '/settings'
+    | '/edit/$recipeId'
+    | '/recipes/$recipeId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/new' | '/edit/$recipeId' | '/recipes/$recipeId'
-  id: '__root__' | '/' | '/new' | '/edit/$recipeId' | '/recipes/$recipeId'
+  to:
+    | '/'
+    | '/fridge'
+    | '/new'
+    | '/recommend'
+    | '/settings'
+    | '/edit/$recipeId'
+    | '/recipes/$recipeId'
+  id:
+    | '__root__'
+    | '/'
+    | '/fridge'
+    | '/new'
+    | '/recommend'
+    | '/settings'
+    | '/edit/$recipeId'
+    | '/recipes/$recipeId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  FridgeRoute: typeof FridgeRoute
   NewRoute: typeof NewRoute
+  RecommendRoute: typeof RecommendRoute
+  SettingsRoute: typeof SettingsRoute
   EditRecipeIdRoute: typeof EditRecipeIdRoute
   RecipesRecipeIdRoute: typeof RecipesRecipeIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/recommend': {
+      id: '/recommend'
+      path: '/recommend'
+      fullPath: '/recommend'
+      preLoaderRoute: typeof RecommendRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/new': {
       id: '/new'
       path: '/new'
       fullPath: '/new'
       preLoaderRoute: typeof NewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fridge': {
+      id: '/fridge'
+      path: '/fridge'
+      fullPath: '/fridge'
+      preLoaderRoute: typeof FridgeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -104,7 +177,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  FridgeRoute: FridgeRoute,
   NewRoute: NewRoute,
+  RecommendRoute: RecommendRoute,
+  SettingsRoute: SettingsRoute,
   EditRecipeIdRoute: EditRecipeIdRoute,
   RecipesRecipeIdRoute: RecipesRecipeIdRoute,
 }

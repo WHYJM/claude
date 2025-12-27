@@ -9,10 +9,16 @@ export const Route = createRootRoute({
           <h1 className="logo">🍳 家庭食谱</h1>
           <div className="nav-links">
             <Link to="/" className="nav-link" activeProps={{ className: 'active' }}>
-              食谱列表
+              食谱
             </Link>
-            <Link to="/new" className="nav-link" activeProps={{ className: 'active' }}>
-              新建食谱
+            <Link to="/fridge" className="nav-link" activeProps={{ className: 'active' }}>
+              冰箱
+            </Link>
+            <Link to="/recommend" className="nav-link" activeProps={{ className: 'active' }}>
+              AI推荐
+            </Link>
+            <Link to="/settings" className="nav-link" activeProps={{ className: 'active' }}>
+              设置
             </Link>
           </div>
         </div>

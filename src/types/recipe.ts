@@ -34,3 +34,59 @@ export interface RecipeFormData {
   tags: string[];
   imageUrl?: string;
 }
+
+// 冰箱食材分类
+export type FridgeCategory =
+  | '蔬菜'
+  | '水果'
+  | '肉类'
+  | '海鲜'
+  | '蛋奶'
+  | '调料'
+  | '主食'
+  | '饮品'
+  | '其他';
+
+// 冰箱食材
+export interface FridgeItem {
+  id: string;
+  name: string;
+  amount: number;
+  unit: string;
+  category: FridgeCategory;
+  expiryDate?: string;  // ISO 日期字符串
+  addedAt: string;
+  updatedAt: string;
+}
+
+// 食材匹配结果
+export interface IngredientMatch {
+  name: string;
+  required: string;      // 食谱需要的量
+  available?: string;    // 冰箱有的量
+  status: 'available' | 'insufficient' | 'missing';
+}
+
+// 食谱匹配结果
+export interface RecipeMatch {
+  recipe: Recipe;
+  matchScore: number;    // 0-100
+  matchedIngredients: IngredientMatch[];
+  missingIngredients: IngredientMatch[];
+}
+
+// AI 生成的食谱
+export interface AIGeneratedRecipe {
+  name: string;
+  description: string;
+  ingredients: { name: string; amount: string; unit: string }[];
+  steps: string[];
+  tips?: string;
+  estimatedTime?: number;
+}
+
+// 应用设置
+export interface AppSettings {
+  geminiApiKey?: string;
+  userName?: string;
+}
