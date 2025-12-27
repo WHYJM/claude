@@ -1,32 +1,38 @@
 import { createRootRoute, Link, Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
+import { Button } from '@/components/ui/button';
 
-export const Route = createRootRoute({
-  component: () => (
-    <div className="app">
-      <nav className="navbar">
-        <div className="nav-container">
-          <h1 className="logo">🍳 家庭食谱</h1>
-          <div className="nav-links">
-            <Link to="/" className="nav-link" activeProps={{ className: 'active' }}>
-              食谱
-            </Link>
-            <Link to="/fridge" className="nav-link" activeProps={{ className: 'active' }}>
-              冰箱
-            </Link>
-            <Link to="/recommend" className="nav-link" activeProps={{ className: 'active' }}>
-              AI推荐
-            </Link>
-            <Link to="/settings" className="nav-link" activeProps={{ className: 'active' }}>
-              设置
-            </Link>
+function RootComponent() {
+  return (
+    <div className="min-h-screen bg-background">
+      <nav className="border-b bg-card">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+          <Link to="/" className="text-xl font-bold flex items-center gap-2">
+            <span>🍳</span>
+            <span>家庭食谱</span>
+          </Link>
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" asChild>
+              <Link to="/" activeProps={{ className: 'bg-accent' }}>
+                首页
+              </Link>
+            </Button>
+            <Button variant="ghost" asChild>
+              <Link to="/settings" activeProps={{ className: 'bg-accent' }}>
+                设置
+              </Link>
+            </Button>
           </div>
         </div>
       </nav>
-      <main className="main-content">
+      <main className="max-w-7xl mx-auto px-4 py-6">
         <Outlet />
       </main>
       <TanStackRouterDevtools />
     </div>
-  ),
+  );
+}
+
+export const Route = createRootRoute({
+  component: RootComponent,
 });

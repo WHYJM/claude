@@ -1,24 +1,24 @@
 import type { Recipe, RecipeFormData } from '../types/recipe';
 import { v4 as uuidv4 } from 'uuid';
 
-const STORAGE_KEY = 'family-recipes';
+const getStorageKey = (projectId: string) => `project:${projectId}:recipes`;
 
 export const recipeService = {
-  // Get all recipes
-  getAllRecipes(): Recipe[] {
-    const data = localStorage.getItem(STORAGE_KEY);
+  // 获取项目的所有食谱
+  getAllRecipes(projectId: string): Recipe[] {
+    const data = localStorage.getItem(getStorageKey(projectId));
     return data ? JSON.parse(data) : [];
   },
 
-  // Get single recipe by ID
-  getRecipeById(id: string): Recipe | undefined {
-    const recipes = this.getAllRecipes();
+  // 获取单个食谱
+  getRecipeById(projectId: string, id: string): Recipe | undefined {
+    const recipes = this.getAllRecipes(projectId);
     return recipes.find(recipe => recipe.id === id);
   },
 
-  // Create new recipe
-  createRecipe(formData: RecipeFormData, createdBy: string): Recipe {
-    const recipes = this.getAllRecipes();
+  // 创建食谱
+  createRecipe(projectId: string, formData: RecipeFormData, createdBy: string): Recipe {
+    const recipes = this.getAllRecipes(projectId);
     const newRecipe: Recipe = {
       ...formData,
       id: uuidv4(),
@@ -27,13 +27,13 @@ export const recipeService = {
       createdBy,
     };
     recipes.push(newRecipe);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(recipes));
+    localStorage.setItem(getStorageKey(projectId), JSON.stringify(recipes));
     return newRecipe;
   },
 
-  // Update existing recipe
-  updateRecipe(id: string, formData: RecipeFormData): Recipe | null {
-    const recipes = this.getAllRecipes();
+  // 更新食谱
+  updateRecipe(projectId: string, id: string, formData: RecipeFormData): Recipe | null {
+    const recipes = this.getAllRecipes(projectId);
     const index = recipes.findIndex(recipe => recipe.id === id);
 
     if (index === -1) return null;
@@ -45,29 +45,29 @@ export const recipeService = {
     };
 
     recipes[index] = updatedRecipe;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(recipes));
+    localStorage.setItem(getStorageKey(projectId), JSON.stringify(recipes));
     return updatedRecipe;
   },
 
-  // Delete recipe
-  deleteRecipe(id: string): boolean {
-    const recipes = this.getAllRecipes();
+  // 删除食谱
+  deleteRecipe(projectId: string, id: string): boolean {
+    const recipes = this.getAllRecipes(projectId);
     const filteredRecipes = recipes.filter(recipe => recipe.id !== id);
 
     if (filteredRecipes.length === recipes.length) return false;
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(filteredRecipes));
+    localStorage.setItem(getStorageKey(projectId), JSON.stringify(filteredRecipes));
     return true;
   },
 
-  // Export recipes as JSON
-  exportRecipes(): string {
-    const recipes = this.getAllRecipes();
+  // 导出食谱
+  exportRecipes(projectId: string): string {
+    const recipes = this.getAllRecipes(projectId);
     return JSON.stringify(recipes, null, 2);
   },
 
-  // Import recipes from JSON
-  importRecipes(jsonString: string): { success: boolean; count: number; error?: string } {
+  // 导入食谱
+  importRecipes(projectId: string, jsonString: string): { success: boolean; count: number; error?: string } {
     try {
       const importedRecipes = JSON.parse(jsonString);
 
@@ -75,19 +75,16 @@ export const recipeService = {
         return { success: false, count: 0, error: '无效的数据格式' };
       }
 
-      const existingRecipes = this.getAllRecipes();
+      const existingRecipes = this.getAllRecipes(projectId);
       const mergedRecipes = [...existingRecipes];
       let importCount = 0;
 
       importedRecipes.forEach(recipe => {
-        // Check if recipe already exists by ID
         const existingIndex = mergedRecipes.findIndex(r => r.id === recipe.id);
         if (existingIndex === -1) {
-          // New recipe
           mergedRecipes.push(recipe);
           importCount++;
         } else {
-          // Update existing recipe if imported one is newer
           const imported = new Date(recipe.updatedAt).getTime();
           const existing = new Date(mergedRecipes[existingIndex].updatedAt).getTime();
           if (imported > existing) {
@@ -97,16 +94,16 @@ export const recipeService = {
         }
       });
 
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(mergedRecipes));
+      localStorage.setItem(getStorageKey(projectId), JSON.stringify(mergedRecipes));
       return { success: true, count: importCount };
-    } catch (error) {
+    } catch {
       return { success: false, count: 0, error: '解析 JSON 失败' };
     }
   },
 
-  // Search recipes
-  searchRecipes(query: string): Recipe[] {
-    const recipes = this.getAllRecipes();
+  // 搜索食谱
+  searchRecipes(projectId: string, query: string): Recipe[] {
+    const recipes = this.getAllRecipes(projectId);
     const lowerQuery = query.toLowerCase();
 
     return recipes.filter(recipe =>
@@ -115,5 +112,10 @@ export const recipeService = {
       recipe.tags.some(tag => tag.toLowerCase().includes(lowerQuery)) ||
       recipe.category.toLowerCase().includes(lowerQuery)
     );
+  },
+
+  // 从协同数据同步到本地（直接覆盖）
+  syncFromCollab(projectId: string, recipes: Recipe[]): void {
+    localStorage.setItem(getStorageKey(projectId), JSON.stringify(recipes));
   },
 };

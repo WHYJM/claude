@@ -90,3 +90,17 @@ export interface AppSettings {
   geminiApiKey?: string;
   userName?: string;
 }
+
+// 项目类型
+export type ProjectType = 'local' | 'collaborative';
+
+// 项目
+export interface Project {
+  id: string;
+  name: string;
+  description?: string;
+  type: ProjectType;
+  roomId?: string;        // 协同时的房间ID
+  createdAt: string;
+  updatedAt: string;
+}

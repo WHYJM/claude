@@ -10,31 +10,14 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as RecommendRouteImport } from './routes/recommend'
-import { Route as NewRouteImport } from './routes/new'
-import { Route as FridgeRouteImport } from './routes/fridge'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as RecipesRecipeIdRouteImport } from './routes/recipes.$recipeId'
-import { Route as EditRecipeIdRouteImport } from './routes/edit.$recipeId'
+import { Route as ProjectProjectIdRouteImport } from './routes/project.$projectId'
+import { Route as ProjectProjectIdRecipeRecipeIdRouteImport } from './routes/project.$projectId.recipe.$recipeId'
+import { Route as ProjectProjectIdEditRecipeIdRouteImport } from './routes/project.$projectId.edit.$recipeId'
 
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RecommendRoute = RecommendRouteImport.update({
-  id: '/recommend',
-  path: '/recommend',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NewRoute = NewRouteImport.update({
-  id: '/new',
-  path: '/new',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FridgeRoute = FridgeRouteImport.update({
-  id: '/fridge',
-  path: '/fridge',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -42,83 +25,74 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RecipesRecipeIdRoute = RecipesRecipeIdRouteImport.update({
-  id: '/recipes/$recipeId',
-  path: '/recipes/$recipeId',
+const ProjectProjectIdRoute = ProjectProjectIdRouteImport.update({
+  id: '/project/$projectId',
+  path: '/project/$projectId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EditRecipeIdRoute = EditRecipeIdRouteImport.update({
-  id: '/edit/$recipeId',
-  path: '/edit/$recipeId',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const ProjectProjectIdRecipeRecipeIdRoute =
+  ProjectProjectIdRecipeRecipeIdRouteImport.update({
+    id: '/recipe/$recipeId',
+    path: '/recipe/$recipeId',
+    getParentRoute: () => ProjectProjectIdRoute,
+  } as any)
+const ProjectProjectIdEditRecipeIdRoute =
+  ProjectProjectIdEditRecipeIdRouteImport.update({
+    id: '/edit/$recipeId',
+    path: '/edit/$recipeId',
+    getParentRoute: () => ProjectProjectIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/fridge': typeof FridgeRoute
-  '/new': typeof NewRoute
-  '/recommend': typeof RecommendRoute
   '/settings': typeof SettingsRoute
-  '/edit/$recipeId': typeof EditRecipeIdRoute
-  '/recipes/$recipeId': typeof RecipesRecipeIdRoute
+  '/project/$projectId': typeof ProjectProjectIdRouteWithChildren
+  '/project/$projectId/edit/$recipeId': typeof ProjectProjectIdEditRecipeIdRoute
+  '/project/$projectId/recipe/$recipeId': typeof ProjectProjectIdRecipeRecipeIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/fridge': typeof FridgeRoute
-  '/new': typeof NewRoute
-  '/recommend': typeof RecommendRoute
   '/settings': typeof SettingsRoute
-  '/edit/$recipeId': typeof EditRecipeIdRoute
-  '/recipes/$recipeId': typeof RecipesRecipeIdRoute
+  '/project/$projectId': typeof ProjectProjectIdRouteWithChildren
+  '/project/$projectId/edit/$recipeId': typeof ProjectProjectIdEditRecipeIdRoute
+  '/project/$projectId/recipe/$recipeId': typeof ProjectProjectIdRecipeRecipeIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/fridge': typeof FridgeRoute
-  '/new': typeof NewRoute
-  '/recommend': typeof RecommendRoute
   '/settings': typeof SettingsRoute
-  '/edit/$recipeId': typeof EditRecipeIdRoute
-  '/recipes/$recipeId': typeof RecipesRecipeIdRoute
+  '/project/$projectId': typeof ProjectProjectIdRouteWithChildren
+  '/project/$projectId/edit/$recipeId': typeof ProjectProjectIdEditRecipeIdRoute
+  '/project/$projectId/recipe/$recipeId': typeof ProjectProjectIdRecipeRecipeIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/fridge'
-    | '/new'
-    | '/recommend'
     | '/settings'
-    | '/edit/$recipeId'
-    | '/recipes/$recipeId'
+    | '/project/$projectId'
+    | '/project/$projectId/edit/$recipeId'
+    | '/project/$projectId/recipe/$recipeId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/fridge'
-    | '/new'
-    | '/recommend'
     | '/settings'
-    | '/edit/$recipeId'
-    | '/recipes/$recipeId'
+    | '/project/$projectId'
+    | '/project/$projectId/edit/$recipeId'
+    | '/project/$projectId/recipe/$recipeId'
   id:
     | '__root__'
     | '/'
-    | '/fridge'
-    | '/new'
-    | '/recommend'
     | '/settings'
-    | '/edit/$recipeId'
-    | '/recipes/$recipeId'
+    | '/project/$projectId'
+    | '/project/$projectId/edit/$recipeId'
+    | '/project/$projectId/recipe/$recipeId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  FridgeRoute: typeof FridgeRoute
-  NewRoute: typeof NewRoute
-  RecommendRoute: typeof RecommendRoute
   SettingsRoute: typeof SettingsRoute
-  EditRecipeIdRoute: typeof EditRecipeIdRoute
-  RecipesRecipeIdRoute: typeof RecipesRecipeIdRoute
+  ProjectProjectIdRoute: typeof ProjectProjectIdRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -130,27 +104,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/recommend': {
-      id: '/recommend'
-      path: '/recommend'
-      fullPath: '/recommend'
-      preLoaderRoute: typeof RecommendRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/new': {
-      id: '/new'
-      path: '/new'
-      fullPath: '/new'
-      preLoaderRoute: typeof NewRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/fridge': {
-      id: '/fridge'
-      path: '/fridge'
-      fullPath: '/fridge'
-      preLoaderRoute: typeof FridgeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -158,31 +111,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/recipes/$recipeId': {
-      id: '/recipes/$recipeId'
-      path: '/recipes/$recipeId'
-      fullPath: '/recipes/$recipeId'
-      preLoaderRoute: typeof RecipesRecipeIdRouteImport
+    '/project/$projectId': {
+      id: '/project/$projectId'
+      path: '/project/$projectId'
+      fullPath: '/project/$projectId'
+      preLoaderRoute: typeof ProjectProjectIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/edit/$recipeId': {
-      id: '/edit/$recipeId'
+    '/project/$projectId/recipe/$recipeId': {
+      id: '/project/$projectId/recipe/$recipeId'
+      path: '/recipe/$recipeId'
+      fullPath: '/project/$projectId/recipe/$recipeId'
+      preLoaderRoute: typeof ProjectProjectIdRecipeRecipeIdRouteImport
+      parentRoute: typeof ProjectProjectIdRoute
+    }
+    '/project/$projectId/edit/$recipeId': {
+      id: '/project/$projectId/edit/$recipeId'
       path: '/edit/$recipeId'
-      fullPath: '/edit/$recipeId'
-      preLoaderRoute: typeof EditRecipeIdRouteImport
-      parentRoute: typeof rootRouteImport
+      fullPath: '/project/$projectId/edit/$recipeId'
+      preLoaderRoute: typeof ProjectProjectIdEditRecipeIdRouteImport
+      parentRoute: typeof ProjectProjectIdRoute
     }
   }
 }
 
+interface ProjectProjectIdRouteChildren {
+  ProjectProjectIdEditRecipeIdRoute: typeof ProjectProjectIdEditRecipeIdRoute
+  ProjectProjectIdRecipeRecipeIdRoute: typeof ProjectProjectIdRecipeRecipeIdRoute
+}
+
+const ProjectProjectIdRouteChildren: ProjectProjectIdRouteChildren = {
+  ProjectProjectIdEditRecipeIdRoute: ProjectProjectIdEditRecipeIdRoute,
+  ProjectProjectIdRecipeRecipeIdRoute: ProjectProjectIdRecipeRecipeIdRoute,
+}
+
+const ProjectProjectIdRouteWithChildren =
+  ProjectProjectIdRoute._addFileChildren(ProjectProjectIdRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  FridgeRoute: FridgeRoute,
-  NewRoute: NewRoute,
-  RecommendRoute: RecommendRoute,
   SettingsRoute: SettingsRoute,
-  EditRecipeIdRoute: EditRecipeIdRoute,
-  RecipesRecipeIdRoute: RecipesRecipeIdRoute,
+  ProjectProjectIdRoute: ProjectProjectIdRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

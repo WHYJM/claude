@@ -1,7 +1,7 @@
 import type { FridgeItem, FridgeCategory } from '../types/recipe';
 import { v4 as uuidv4 } from 'uuid';
 
-const STORAGE_KEY = 'family-fridge';
+const getStorageKey = (projectId: string) => `project:${projectId}:fridge`;
 
 export const FRIDGE_CATEGORIES: FridgeCategory[] = [
   '蔬菜',
@@ -16,21 +16,21 @@ export const FRIDGE_CATEGORIES: FridgeCategory[] = [
 ];
 
 export const fridgeService = {
-  // 获取所有食材
-  getAllItems(): FridgeItem[] {
-    const data = localStorage.getItem(STORAGE_KEY);
+  // 获取项目的所有食材
+  getAllItems(projectId: string): FridgeItem[] {
+    const data = localStorage.getItem(getStorageKey(projectId));
     return data ? JSON.parse(data) : [];
   },
 
   // 获取单个食材
-  getItemById(id: string): FridgeItem | undefined {
-    const items = this.getAllItems();
+  getItemById(projectId: string, id: string): FridgeItem | undefined {
+    const items = this.getAllItems(projectId);
     return items.find(item => item.id === id);
   },
 
   // 添加食材
-  addItem(item: Omit<FridgeItem, 'id' | 'addedAt' | 'updatedAt'>): FridgeItem {
-    const items = this.getAllItems();
+  addItem(projectId: string, item: Omit<FridgeItem, 'id' | 'addedAt' | 'updatedAt'>): FridgeItem {
+    const items = this.getAllItems(projectId);
     const newItem: FridgeItem = {
       ...item,
       id: uuidv4(),
@@ -38,13 +38,13 @@ export const fridgeService = {
       updatedAt: new Date().toISOString(),
     };
     items.push(newItem);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    localStorage.setItem(getStorageKey(projectId), JSON.stringify(items));
     return newItem;
   },
 
   // 更新食材
-  updateItem(id: string, updates: Partial<Omit<FridgeItem, 'id' | 'addedAt'>>): FridgeItem | null {
-    const items = this.getAllItems();
+  updateItem(projectId: string, id: string, updates: Partial<Omit<FridgeItem, 'id' | 'addedAt'>>): FridgeItem | null {
+    const items = this.getAllItems(projectId);
     const index = items.findIndex(item => item.id === id);
 
     if (index === -1) return null;
@@ -56,32 +56,32 @@ export const fridgeService = {
     };
 
     items[index] = updatedItem;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    localStorage.setItem(getStorageKey(projectId), JSON.stringify(items));
     return updatedItem;
   },
 
   // 删除食材
-  deleteItem(id: string): boolean {
-    const items = this.getAllItems();
+  deleteItem(projectId: string, id: string): boolean {
+    const items = this.getAllItems(projectId);
     const filteredItems = items.filter(item => item.id !== id);
 
     if (filteredItems.length === items.length) return false;
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(filteredItems));
+    localStorage.setItem(getStorageKey(projectId), JSON.stringify(filteredItems));
     return true;
   },
 
   // 按分类获取食材
-  getItemsByCategory(category: FridgeCategory): FridgeItem[] {
-    return this.getAllItems().filter(item => item.category === category);
+  getItemsByCategory(projectId: string, category: FridgeCategory): FridgeItem[] {
+    return this.getAllItems(projectId).filter(item => item.category === category);
   },
 
   // 获取快过期的食材（3天内）
-  getExpiringItems(daysThreshold: number = 3): FridgeItem[] {
+  getExpiringItems(projectId: string, daysThreshold: number = 3): FridgeItem[] {
     const now = new Date();
     const threshold = new Date(now.getTime() + daysThreshold * 24 * 60 * 60 * 1000);
 
-    return this.getAllItems().filter(item => {
+    return this.getAllItems(projectId).filter(item => {
       if (!item.expiryDate) return false;
       const expiryDate = new Date(item.expiryDate);
       return expiryDate <= threshold && expiryDate >= now;
@@ -89,27 +89,27 @@ export const fridgeService = {
   },
 
   // 获取已过期的食材
-  getExpiredItems(): FridgeItem[] {
+  getExpiredItems(projectId: string): FridgeItem[] {
     const now = new Date();
 
-    return this.getAllItems().filter(item => {
+    return this.getAllItems(projectId).filter(item => {
       if (!item.expiryDate) return false;
       return new Date(item.expiryDate) < now;
     });
   },
 
   // 获取食材名称列表（用于 AI）
-  getIngredientNames(): string[] {
-    return this.getAllItems().map(item => `${item.name} ${item.amount}${item.unit}`);
+  getIngredientNames(projectId: string): string[] {
+    return this.getAllItems(projectId).map(item => `${item.name} ${item.amount}${item.unit}`);
   },
 
   // 导出食材
-  exportItems(): string {
-    return JSON.stringify(this.getAllItems(), null, 2);
+  exportItems(projectId: string): string {
+    return JSON.stringify(this.getAllItems(projectId), null, 2);
   },
 
   // 导入食材
-  importItems(jsonString: string): { success: boolean; count: number; error?: string } {
+  importItems(projectId: string, jsonString: string): { success: boolean; count: number; error?: string } {
     try {
       const importedItems = JSON.parse(jsonString);
 
@@ -117,7 +117,7 @@ export const fridgeService = {
         return { success: false, count: 0, error: '无效的数据格式' };
       }
 
-      const existingItems = this.getAllItems();
+      const existingItems = this.getAllItems(projectId);
       let importCount = 0;
 
       importedItems.forEach(item => {
@@ -128,7 +128,7 @@ export const fridgeService = {
         }
       });
 
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(existingItems));
+      localStorage.setItem(getStorageKey(projectId), JSON.stringify(existingItems));
       return { success: true, count: importCount };
     } catch {
       return { success: false, count: 0, error: '解析 JSON 失败' };
@@ -136,7 +136,12 @@ export const fridgeService = {
   },
 
   // 清空冰箱
-  clearAll(): void {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
+  clearAll(projectId: string): void {
+    localStorage.setItem(getStorageKey(projectId), JSON.stringify([]));
+  },
+
+  // 从协同数据同步到本地（直接覆盖）
+  syncFromCollab(projectId: string, items: FridgeItem[]): void {
+    localStorage.setItem(getStorageKey(projectId), JSON.stringify(items));
   },
 };
