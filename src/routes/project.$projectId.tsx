@@ -42,7 +42,7 @@ function CollaborationPanel({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-  const project = projectService.getProjectById(projectId);
+  const [answerCode, setAnswerCode] = useState('');
   const settings = settingsService.getSettings();
 
   // 设置用户名
@@ -69,40 +69,38 @@ function CollaborationPanel({
     }
   };
 
-  // 重新连接（对于已有 roomId 的项目）
-  const handleReconnect = async () => {
-    if (!project?.roomId) return;
-    setIsLoading(true);
-    setError(null);
-    try {
-      // 如果是原房主，使用房间 ID 作为 peer ID 重新创建房间
-      // 这里简化处理：只能创建新房间或加入现有房间
-      // 房主需要重新创建房间，其他人需要房主在线才能加入
-      await collaborationService.createRoom();
-      const newRoomId = collabState.roomId;
-      if (newRoomId) {
-        projectService.setProjectRoomId(projectId, newRoomId);
-        collaborationService.importFromLocal(recipes, fridgeItems);
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : '连接失败');
-    } finally {
-      setIsLoading(false);
+  // 复制连接代码
+  const handleCopyOffer = async () => {
+    const offer = collaborationService.getConnectionOffer();
+    if (offer) {
+      await navigator.clipboard.writeText(offer);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
   };
 
-  // 复制房间号
-  const handleCopyRoomId = async () => {
-    if (collabState.roomId) {
-      await navigator.clipboard.writeText(collabState.roomId);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+  // 处理 answer（房主粘贴加入者的 answer）
+  const handleSubmitAnswer = async () => {
+    if (!answerCode.trim()) {
+      alert('请粘贴连接响应代码');
+      return;
+    }
+    setIsLoading(true);
+    setError(null);
+    try {
+      await collaborationService.handleAnswer(answerCode.trim());
+      setAnswerCode('');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : '处理响应失败');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   // 离开协同
   const handleLeaveRoom = () => {
     collaborationService.leaveRoom();
+    setAnswerCode('');
     onDataChange();
   };
 
@@ -126,15 +124,8 @@ function CollaborationPanel({
             {/* 房间信息 */}
             <div className="p-4 bg-muted rounded-lg space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">房间号</span>
-                <div className="flex items-center gap-2">
-                  <code className="px-2 py-1 bg-background rounded text-sm font-mono">
-                    {collabState.roomId}
-                  </code>
-                  <Button variant="ghost" size="sm" onClick={handleCopyRoomId}>
-                    {copied ? '已复制!' : '复制'}
-                  </Button>
-                </div>
+                <span className="text-sm text-muted-foreground">连接状态</span>
+                <Badge variant="default">已连接</Badge>
               </div>
               {collabState.isHost && (
                 <Badge variant="secondary">你是房主</Badge>
@@ -172,6 +163,76 @@ function CollaborationPanel({
     );
   }
 
+  // 如果等待 answer，显示连接信息
+  if (collabState.needsAnswer && collabState.connectionOffer) {
+    return (
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogTrigger asChild>
+          <Button variant="outline" size="sm" className="relative">
+            <span className="animate-pulse absolute -top-1 -right-1 h-3 w-3 bg-orange-500 rounded-full" />
+            等待连接
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>等待对方连接</DialogTitle>
+            <DialogDescription>
+              请将连接信息发送给对方，然后粘贴对方的响应代码
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            {error && (
+              <div className="p-3 bg-destructive/10 text-destructive text-sm rounded-lg">
+                {error}
+              </div>
+            )}
+
+            {/* 步骤 1: 复制连接信息 */}
+            <div className="space-y-2">
+              <Label>步骤 1: 复制以下连接信息发送给对方</Label>
+              <div className="relative">
+                <Textarea
+                  value={collabState.connectionOffer}
+                  readOnly
+                  className="font-mono text-xs h-32 resize-none pr-20"
+                />
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="absolute top-2 right-2"
+                  onClick={handleCopyOffer}
+                >
+                  {copied ? '已复制!' : '复制'}
+                </Button>
+              </div>
+            </div>
+
+            {/* 步骤 2: 粘贴响应代码 */}
+            <div className="space-y-2">
+              <Label htmlFor="answerCode">步骤 2: 粘贴对方的响应代码</Label>
+              <Textarea
+                id="answerCode"
+                value={answerCode}
+                onChange={(e) => setAnswerCode(e.target.value)}
+                placeholder="粘贴对方返回的响应代码..."
+                className="font-mono text-xs h-32 resize-none"
+              />
+            </div>
+
+            <div className="flex gap-2 pt-2">
+              <Button onClick={handleSubmitAnswer} disabled={isLoading || !answerCode.trim()}>
+                {isLoading ? '连接中...' : '完成连接'}
+              </Button>
+              <Button variant="outline" onClick={handleLeaveRoom}>
+                取消协同
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
   // 未连接状态
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -184,25 +245,13 @@ function CollaborationPanel({
         <DialogHeader>
           <DialogTitle>开启协同编辑</DialogTitle>
           <DialogDescription>
-            创建协同房间后，可以分享房间号给其他人加入
+            创建协同房间后，可以通过复制粘贴连接信息邀请其他人加入
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
           {error && (
             <div className="p-3 bg-destructive/10 text-destructive text-sm rounded-lg">
               {error}
-            </div>
-          )}
-
-          {project?.roomId && !collabState.isConnected && (
-            <div className="p-3 bg-muted rounded-lg text-sm">
-              <p className="text-muted-foreground mb-2">
-                此项目曾开启过协同，房间号：
-                <code className="ml-1 px-1 bg-background rounded">{project.roomId}</code>
-              </p>
-              <p className="text-xs text-muted-foreground">
-                注意：需要重新创建房间，之前的参与者需要使用新房间号加入
-              </p>
             </div>
           )}
 
@@ -218,14 +267,20 @@ function CollaborationPanel({
                 </span>
               )}
             </p>
+            <div className="p-3 bg-blue-50 dark:bg-blue-950 rounded-lg text-sm space-y-1">
+              <p className="font-medium">连接步骤：</p>
+              <ol className="list-decimal list-inside space-y-1 text-muted-foreground">
+                <li>点击"创建协同房间"生成连接信息</li>
+                <li>将连接信息发送给对方（微信/邮件等）</li>
+                <li>对方使用连接信息加入并生成响应代码</li>
+                <li>将对方的响应代码粘贴回来完成连接</li>
+              </ol>
+            </div>
           </div>
 
           <div className="flex gap-2 pt-2">
-            <Button
-              onClick={project?.roomId ? handleReconnect : handleCreateRoom}
-              disabled={isLoading}
-            >
-              {isLoading ? '连接中...' : '创建协同房间'}
+            <Button onClick={handleCreateRoom} disabled={isLoading}>
+              {isLoading ? '创建中...' : '创建协同房间'}
             </Button>
             <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
               取消

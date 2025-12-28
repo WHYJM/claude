@@ -3,6 +3,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { projectService } from '@/services/projectService';
 import { recipeService } from '@/services/recipeService';
 import { fridgeService } from '@/services/fridgeService';
+import { collaborationService } from '@/services/collaborationService';
 import type { Project } from '@/types/recipe';
 
 import { Button } from '@/components/ui/button';
@@ -37,10 +38,23 @@ function HomePage() {
     navigate({ to: '/project/$projectId', params: { projectId: newProject.id } });
   };
 
-  const handleJoinProject = (roomId: string, name: string) => {
-    const project = projectService.joinCollaborativeProject(roomId, name);
-    setIsJoinDialogOpen(false);
-    navigate({ to: '/project/$projectId', params: { projectId: project.id } });
+  const handleJoinProject = async (offerCode: string, name: string) => {
+    try {
+      // 使用 collaboration service 处理 offer 并生成 answer
+      const answerCode = await collaborationService.joinRoom(offerCode);
+
+      // 创建本地项目
+      const project = projectService.createProject(name, '协同项目', 'collaborative');
+
+      // 显示 answer 代码给用户
+      alert(`连接信息已生成！请将以下内容发送给房主：\n\n${answerCode}\n\n（已复制到剪贴板）`);
+      await navigator.clipboard.writeText(answerCode);
+
+      setIsJoinDialogOpen(false);
+      navigate({ to: '/project/$projectId', params: { projectId: project.id } });
+    } catch (error) {
+      alert(`加入失败: ${error instanceof Error ? error.message : '未知错误'}`);
+    }
   };
 
   const handleDeleteProject = (id: string, e: React.MouseEvent) => {
@@ -268,39 +282,39 @@ function JoinProjectForm({
   onSubmit,
   onCancel,
 }: {
-  onSubmit: (roomId: string, name: string) => void;
+  onSubmit: (offerCode: string, name: string) => void;
   onCancel: () => void;
 }) {
-  const [roomId, setRoomId] = useState('');
+  const [offerCode, setOfferCode] = useState('');
   const [name, setName] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!roomId.trim()) {
-      alert('请输入房间 ID');
+    if (!offerCode.trim()) {
+      alert('请粘贴连接信息');
       return;
     }
     if (!name.trim()) {
       alert('请输入项目名称');
       return;
     }
-    onSubmit(roomId.trim().toUpperCase(), name.trim());
+    onSubmit(offerCode.trim(), name.trim());
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="roomId">房间 ID *</Label>
-        <Input
-          id="roomId"
-          value={roomId}
-          onChange={(e) => setRoomId(e.target.value.toUpperCase())}
-          placeholder="例如：ROOM-XXXXX"
-          className="font-mono uppercase"
+        <Label htmlFor="offerCode">连接信息 *</Label>
+        <Textarea
+          id="offerCode"
+          value={offerCode}
+          onChange={(e) => setOfferCode(e.target.value)}
+          placeholder="粘贴房主分享的连接信息..."
+          className="font-mono text-xs h-32 resize-none"
           autoFocus
         />
         <p className="text-sm text-muted-foreground">
-          输入房主分享的房间 ID 来加入协同编辑
+          粘贴房主提供的连接信息（完整的编码字符串）
         </p>
       </div>
       <div className="space-y-2">
