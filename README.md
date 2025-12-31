@@ -48,6 +48,21 @@ pnpm build
 pnpm preview
 ```
 
+## 部署到 GitHub Pages
+
+本项目已配置自动部署到 GitHub Pages。当你推送代码到 `claude/family-recipe-editor-2M2XM` 分支时，GitHub Actions 会自动构建并部署应用。
+
+### 启用 GitHub Pages
+
+1. 进入仓库的 Settings → Pages
+2. 在 "Build and deployment" 下选择 "GitHub Actions" 作为 Source
+3. 推送代码后，GitHub Actions 会自动运行部署流程
+4. 部署完成后，应用将在 `https://WHYJM.github.io/claude/` 访问
+
+### 手动触发部署
+
+也可以在 GitHub Actions 页面手动触发部署工作流。
+
 ## 使用指南
 
 ### 创建食谱
