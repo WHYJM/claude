@@ -170,5 +170,49 @@
       width: 100%;
       overflow: hidden;
     }
+
+    /* Dialog/Modal optimizations for mobile keyboard */
+    [role="dialog"],
+    [role="alertdialog"],
+    .dialog-content {
+      /* Use dynamic viewport height */
+      max-height: 100dvh;
+      max-height: var(--viewport-height, 100vh);
+    }
+
+    /* Dialog content area should be scrollable */
+    [data-dialog-content],
+    .dialog-scroll-area {
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      /* Reserve space for keyboard */
+      max-height: calc(100dvh - 8rem);
+      max-height: calc(var(--viewport-height, 100vh) - 8rem);
+    }
+
+    /* Dialog positioned to accommodate keyboard */
+    [role="dialog"][data-state="open"],
+    [role="alertdialog"][data-state="open"] {
+      /* Align to top when keyboard is open to prevent content being hidden */
+      align-items: flex-start;
+      padding-top: 2rem;
+    }
+
+    /* Ensure dialog inputs are visible */
+    [role="dialog"] input,
+    [role="dialog"] textarea,
+    [role="alertdialog"] input,
+    [role="alertdialog"] textarea {
+      /* Prevent zoom on iOS */
+      font-size: max(16px, 1rem);
+    }
+  }
+
+  /* Desktop: center dialogs normally */
+  @media (min-width: 769px) {
+    [role="dialog"],
+    [role="alertdialog"] {
+      align-items: center;
+    }
   }
 }
