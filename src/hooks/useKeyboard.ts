@@ -20,14 +20,14 @@ export function useKeyboardAdjustment() {
         target.tagName === 'TEXTAREA' ||
         target.isContentEditable
       ) {
-        // Check if input is inside a dialog/modal
-        const dialog = target.closest('[role="dialog"], [role="alertdialog"], .dialog-content');
+        // Check if input is inside a dialog/modal (shadcn/ui compatible)
+        const dialog = target.closest('[role="dialog"], [role="alertdialog"], [data-slot="dialog-content"], .dialog-content');
 
         // Small delay to ensure keyboard is shown
         setTimeout(() => {
           if (dialog) {
             // For dialog inputs, scroll within the dialog content
-            const dialogContent = dialog.querySelector('[data-dialog-content], .dialog-scroll-area');
+            const dialogContent = dialog.querySelector('[data-dialog-content], [data-slot="scroll-area-viewport"], .dialog-scroll-area');
             if (dialogContent) {
               // Scroll the dialog content, not the whole page
               const inputRect = target.getBoundingClientRect();

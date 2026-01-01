@@ -171,9 +171,10 @@
       overflow: hidden;
     }
 
-    /* Dialog/Modal optimizations for mobile keyboard */
+    /* Dialog/Modal optimizations for mobile keyboard (shadcn/ui) */
     [role="dialog"],
     [role="alertdialog"],
+    [data-slot="dialog-content"],
     .dialog-content {
       /* Use dynamic viewport height */
       max-height: 100dvh;
@@ -182,6 +183,7 @@
 
     /* Dialog content area should be scrollable */
     [data-dialog-content],
+    [data-slot="scroll-area-viewport"],
     .dialog-scroll-area {
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
@@ -192,7 +194,8 @@
 
     /* Dialog positioned to accommodate keyboard */
     [role="dialog"][data-state="open"],
-    [role="alertdialog"][data-state="open"] {
+    [role="alertdialog"][data-state="open"],
+    [data-slot="dialog-content"][data-state="open"] {
       /* Align to top when keyboard is open to prevent content being hidden */
       align-items: flex-start;
       padding-top: 2rem;
@@ -202,7 +205,9 @@
     [role="dialog"] input,
     [role="dialog"] textarea,
     [role="alertdialog"] input,
-    [role="alertdialog"] textarea {
+    [role="alertdialog"] textarea,
+    [data-slot="dialog-content"] input,
+    [data-slot="dialog-content"] textarea {
       /* Prevent zoom on iOS */
       font-size: max(16px, 1rem);
     }
