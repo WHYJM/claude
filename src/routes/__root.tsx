@@ -1,8 +1,13 @@
 import { createRootRoute, Link, Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
 import { Button } from '@/components/ui/button';
+import { useKeyboardAdjustment, useVisualViewport } from '@/hooks/useKeyboard';
 
 function RootComponent() {
+  // Handle keyboard adjustments for mobile
+  useKeyboardAdjustment();
+  useVisualViewport();
+
   return (
     <div className="min-h-screen bg-background">
       <nav className="border-b bg-card">

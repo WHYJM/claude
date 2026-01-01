@@ -46,6 +46,8 @@
 
 :root {
   --radius: 0.625rem;
+  /* Dynamic viewport height - updated by JS when keyboard appears */
+  --viewport-height: 100vh;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -119,5 +121,54 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* Mobile keyboard adjustments */
+@layer utilities {
+  /* Use dynamic viewport height */
+  .h-screen-safe {
+    height: var(--viewport-height, 100vh);
+    height: 100dvh; /* Fallback to dynamic viewport height */
+  }
+
+  .min-h-screen-safe {
+    min-height: var(--viewport-height, 100vh);
+    min-height: 100dvh;
+  }
+
+  .max-h-screen-safe {
+    max-height: var(--viewport-height, 100vh);
+    max-height: 100dvh;
+  }
+
+  /* Prevent zoom on input focus (iOS) */
+  @supports (-webkit-touch-callout: none) {
+    input[type="text"],
+    input[type="email"],
+    input[type="number"],
+    input[type="tel"],
+    input[type="url"],
+    input[type="password"],
+    input[type="search"],
+    textarea,
+    select {
+      font-size: 16px !important;
+    }
+  }
+
+  /* Smooth scrolling for mobile */
+  @media (max-width: 768px) {
+    html {
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Prevent body scroll when keyboard is open */
+    body.keyboard-open {
+      position: fixed;
+      width: 100%;
+      overflow: hidden;
+    }
   }
 }
