@@ -105,7 +105,8 @@ services:
       - kitchen-net
     restart: unless-stopped
 
-  # AI Agent Service (Python FastAPI)
+  # AI Agent Service (Google ADK + FastAPI)
+  # 默认使用 FastAPI 模式，可切换为 ADK 模式
   ai-agent:
     build:
       context: ./services/ai-agent
@@ -114,10 +115,14 @@ services:
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER:-admin}:${POSTGRES_PASSWORD:-password}@postgres:5432/kitchen_db
       - REDIS_URL=redis://redis:6379
-      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
       - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - PYTHONPATH=/app
     ports:
       - "8000:8000"
+    # 切换运行模式:
+    # command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]  # FastAPI (默认)
+    # command: ["adk", "web", "--port", "8000"]  # ADK Web UI
+    # command: ["adk", "api_server", "--port", "8000"]  # ADK API Server
     depends_on:
       postgres:
         condition: service_healthy

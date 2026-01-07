@@ -1,0 +1,44 @@
+# Smart Kitchen AI Agent - ADK 配置
+# https://google.github.io/adk-docs/
+
+name: smart_kitchen_agent
+version: 0.0.1
+description: 智能厨房 AI 助手 - 食谱推荐、烹饪指导、食材管理
+
+# Agent 入口
+agent:
+  module: smart_kitchen_agent
+  class: root_agent
+
+# 模型配置
+model:
+  provider: google
+  name: gemini-2.0-flash-exp
+
+# 服务配置
+server:
+  host: 0.0.0.0
+  port: 8000
+  cors:
+    enabled: true
+    origins:
+      - "*"
+
+# 工具配置
+tools:
+  - name: recommend_recipes
+    description: 根据冰箱食材推荐食谱
+  - name: generate_recipe
+    description: 根据菜名生成详细食谱
+  - name: check_ingredients
+    description: 检查食材是否足够
+  - name: get_cooking_tips
+    description: 获取烹饪技巧
+  - name: analyze_nutrition
+    description: 分析营养成分
+
+# 环境变量
+env:
+  - GEMINI_API_KEY
+  - DATABASE_URL
+  - REDIS_URL

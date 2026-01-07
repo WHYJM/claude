@@ -143,13 +143,16 @@ async def call_gemini(prompt: str, system_instruction: str = None) -> str:
 
 @app.get("/")
 async def root():
+    from smart_kitchen_agent import ADK_AVAILABLE
     return {
         "name": "Smart Kitchen AI Agent",
         "version": "0.0.1",
         "framework": "Google ADK + FastAPI",
         "model": "Gemini 2.0 Flash",
+        "adk_available": ADK_AVAILABLE,
         "endpoints": {
             "health": "/health",
+            "agent": "/api/agent",
             "recommend": "POST /api/recommend",
             "generate": "POST /api/generate",
             "chat": "POST /api/chat",
@@ -166,6 +169,15 @@ async def health():
         "gemini_configured": bool(GEMINI_API_KEY),
         "timestamp": datetime.utcnow().isoformat(),
     }
+
+
+@app.get("/api/agent")
+async def agent_info():
+    """获取 ADK Agent 信息"""
+    from smart_kitchen_agent import get_agent_info, ADK_AVAILABLE
+    info = get_agent_info()
+    info["gemini_configured"] = bool(GEMINI_API_KEY)
+    return info
 
 
 @app.post("/api/recommend", response_model=List[GeneratedRecipe])
