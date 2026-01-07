@@ -39,7 +39,10 @@
 
 | 组件 | 技术 | 职责 |
 |------|------|------|
-| 服务 | **Python (FastAPI)** + **ADK** | 运行 AI Agent、图像识别、RAG (向量检索)、流式对话生成 |
+| 服务 | **Python (FastAPI)** + **Google ADK** | 运行 AI Agent、图像识别、RAG (向量检索)、流式对话生成 |
+| 模型 | **Gemini 2.0 Flash** | Google 最新多模态模型 |
+
+> **Google ADK (Agent Development Kit)** 是 Google 推出的 AI Agent 开发框架，提供 Agent、Tool、Orchestrator 等核心组件。
 
 ### 🧱 基础设施 (The Infra)
 
