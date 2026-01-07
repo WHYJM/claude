@@ -1,0 +1,155 @@
+# ============================================
+# Smart Kitchen - Docker Compose
+# ============================================
+#
+# 启动命令:
+#   docker compose up -d        # 后台启动
+#   docker compose up --build   # 重新构建并启动
+#   docker compose logs -f      # 查看日志
+#   docker compose down         # 停止并删除容器
+#
+# ============================================
+
+networks:
+  kitchen-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+
+services:
+  # ============================================================
+  # 1. 基础设施 (Infrastructure)
+  # ============================================================
+
+  # PostgreSQL + pgvector
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: kitchen-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-kitchen_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infra/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - kitchen-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d kitchen_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Redis
+  redis:
+    image: redis:alpine
+    container_name: kitchen-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - kitchen-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ============================================================
+  # 2. 后端服务 (Backend Services)
+  # ============================================================
+
+  # Core Java Service (Spring Boot)
+  core-java:
+    build:
+      context: ./services/core-java
+      dockerfile: Dockerfile
+    container_name: svc-core
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/kitchen_db
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER:-admin}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD:-password}
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - kitchen-net
+    restart: unless-stopped
+
+  # Realtime Go Service (WebSocket)
+  realtime-go:
+    build:
+      context: ./services/realtime-go
+      dockerfile: Dockerfile
+    container_name: svc-realtime
+    environment:
+      - REDIS_ADDR=redis:6379
+      - PORT=8081
+    ports:
+      - "8081:8081"
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - kitchen-net
+    restart: unless-stopped
+
+  # AI Agent Service (Python FastAPI)
+  ai-agent:
+    build:
+      context: ./services/ai-agent
+      dockerfile: Dockerfile
+    container_name: svc-ai
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-admin}:${POSTGRES_PASSWORD:-password}@postgres:5432/kitchen_db
+      - REDIS_URL=redis://redis:6379
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - kitchen-net
+    restart: unless-stopped
+
+  # ============================================================
+  # 3. 网关 (Gateway) - 开发时可选
+  # ============================================================
+
+  # Hono Gateway (可选 - 开发时建议在宿主机运行)
+  # gateway:
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/gateway/Dockerfile
+  #   container_name: svc-gateway
+  #   environment:
+  #     - NODE_ENV=production
+  #     - DATABASE_URL=postgresql://admin:password@postgres:5432/kitchen_db
+  #     - REDIS_URL=redis://redis:6379
+  #     - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET:-dev-secret}
+  #     - CORE_JAVA_URL=http://core-java:8080
+  #     - REALTIME_GO_URL=http://realtime-go:8081
+  #     - AI_AGENT_URL=http://ai-agent:8000
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - core-java
+  #     - realtime-go
+  #     - ai-agent
+  #   networks:
+  #     - kitchen-net
