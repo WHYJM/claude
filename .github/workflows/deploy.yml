@@ -4,6 +4,13 @@ on:
   push:
     branches:
       - claude/family-recipe-editor-2M2XM
+    paths:
+      - 'apps/web/**'
+      - 'packages/**'
+      - 'pnpm-lock.yaml'
+      - 'package.json'
+      - 'turbo.json'
+      - '.github/workflows/deploy.yml'
   workflow_dispatch:
 
 permissions:
