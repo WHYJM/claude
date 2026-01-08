@@ -1,149 +1,123 @@
-# 家庭食谱编辑器 🍳
+# Smart Kitchen
 
-一个简单易用的家庭食谱管理应用，让您和家人可以轻松创建、编辑和分享食谱。
+> 智能厨房管理平台 - 一个用于学习全栈架构的 Monorepo 项目
 
-## 功能特点
+## 项目简介
 
-- ✨ **创建和编辑食谱** - 轻松添加食材、步骤、烹饪时间等信息
-- 📋 **食谱列表** - 查看所有保存的食谱，支持搜索和筛选
-- 🔍 **搜索功能** - 按名称、分类或标签快速查找食谱
-- 📤 **导出/导入** - 将食谱导出为 JSON 文件，方便与家人分享
-- 💾 **本地存储** - 所有数据保存在浏览器本地，无需服务器
-- 🎨 **简洁界面** - 清爽的 UI 设计，易于使用
-- 🖨️ **打印功能** - 可以打印食谱用于烹饪
+Smart Kitchen 是一个集成了现代 Web 开发最佳实践的全栈项目，采用 Polyglot 微服务架构。项目主要目的是学习和实践：
+
+- **Monorepo 管理** - pnpm workspace + Turborepo
+- **多语言微服务** - TypeScript, Java, Go, Python
+- **现代前端技术** - TanStack Router/Query, React 19
+- **容器化部署** - Docker Compose
 
 ## 技术栈
 
-- **React 18** - 用户界面框架
-- **TypeScript** - 类型安全
-- **Vite** - 快速的构建工具
-- **TanStack Router** - 现代化的路由解决方案
-- **LocalStorage** - 本地数据持久化
+### 前端
+
+| 应用 | 技术 | 端口 |
+|------|------|------|
+| Web | Vite + React + TanStack Router | 5173 |
+| Mobile | Expo + React Native | - |
+| Gateway | Hono + Node.js | 3000 |
+
+### 后端
+
+| 服务 | 技术 | 端口 |
+|------|------|------|
+| Core | Java 21 + Spring Boot 3 | 8080 |
+| Realtime | Go 1.22 + Gin | 8081 |
+| AI Agent | Python 3.11 + FastAPI | 8000 |
+
+### 基础设施
+
+| 组件 | 技术 | 端口 |
+|------|------|------|
+| Database | PostgreSQL 16 + pgvector | 5432 |
+| Cache | Redis | 6379 |
 
 ## 快速开始
 
-### 安装依赖
+### 环境要求
+
+- Node.js >= 20
+- pnpm >= 9
+- Docker & Docker Compose
+
+### 安装
 
 ```bash
+# 安装依赖
 pnpm install
+
+# 配置环境变量
+cp .env.example .env
+
+# 启动基础设施
+docker compose up postgres redis -d
+
+# 启动 Web 开发服务器
+pnpm dev:web
 ```
 
-### 开发模式
+### 启动所有后端服务
 
 ```bash
-pnpm dev
+docker compose up -d
 ```
 
-应用将在 http://localhost:5173 启动
+## 项目结构
 
-### 构建生产版本
+```
+smart-kitchen/
+├── apps/
+│   ├── web/              # Web 前端
+│   ├── mobile/           # 移动端 (Expo)
+│   └── gateway/          # API 网关 (Hono)
+├── packages/
+│   ├── shared-types/     # 共享类型
+│   ├── ui/               # 共享 UI 组件
+│   └── api-client/       # API 客户端
+├── services/
+│   ├── core-java/        # 核心业务服务
+│   ├── realtime-go/      # 实时服务
+│   └── ai-agent/         # AI 服务
+└── infra/
+    └── postgres/         # 数据库初始化
+```
+
+## 常用命令
 
 ```bash
-pnpm build
+# 开发
+pnpm dev              # 启动所有应用
+pnpm dev:web          # 仅启动 Web
+pnpm dev:gateway      # 仅启动 Gateway
+
+# 构建
+pnpm build            # 构建所有
+pnpm typecheck        # 类型检查
+pnpm lint             # 代码检查
+
+# Docker
+pnpm docker:up        # 启动 Docker 服务
+pnpm docker:down      # 停止 Docker 服务
+pnpm docker:logs      # 查看日志
 ```
 
-### 预览生产构建
+## 文档
 
-```bash
-pnpm preview
-```
+- [完整架构设计](./docs/fullstack-architecture-plan.md)
+- [Monorepo 开发指南](./docs/monorepo-guide.md)
 
-## 部署到 GitHub Pages
+## 功能特性
 
-本项目已配置自动部署到 GitHub Pages。当你推送代码到 `claude/family-recipe-editor-2M2XM` 分支时，GitHub Actions 会自动构建并部署应用。
-
-### 启用 GitHub Pages
-
-1. 进入仓库的 Settings → Pages
-2. 在 "Build and deployment" 下选择 "GitHub Actions" 作为 Source
-3. 推送代码后，GitHub Actions 会自动运行部署流程
-4. 部署完成后，应用将在 `https://WHYJM.github.io/claude/` 访问
-
-### 手动触发部署
-
-也可以在 GitHub Actions 页面手动触发部署工作流。
-
-## 使用指南
-
-### 创建食谱
-
-1. 点击"新建食谱"按钮
-2. 输入您的名字（作为创建者）
-3. 填写食谱信息：
-   - 名称和描述
-   - 分类（如中餐、甜点等）
-   - 准备时间和烹饪时间
-   - 份数
-   - 食材列表
-   - 烹饪步骤
-   - 标签
-4. 点击"创建食谱"保存
-
-### 查看食谱
-
-- 在首页点击食谱卡片查看详细信息
-- 可以查看所有食材、步骤和烹饪信息
-- 点击"打印"按钮可以打印食谱
-
-### 编辑食谱
-
-- 在食谱详情页点击"编辑"
-- 修改任何信息后点击"更新食谱"
-
-### 搜索食谱
-
-- 使用搜索框输入关键词
-- 支持搜索名称、描述、分类和标签
-
-### 分享食谱
-
-#### 导出食谱
-
-1. 在首页点击"导出食谱"
-2. 系统会下载一个 JSON 文件
-3. 将此文件分享给家人
-
-#### 导入食谱
-
-1. 点击"导入食谱"
-2. 选择之前导出的 JSON 文件
-3. 系统会自动合并食谱（已存在的食谱会更新为最新版本）
-
-## 数据存储
-
-所有食谱数据都存储在浏览器的 LocalStorage 中，这意味着：
-
-- ✅ 数据完全私密，不会上传到任何服务器
-- ✅ 无需注册账号
-- ✅ 可以离线使用
-- ⚠️ 清除浏览器数据会删除所有食谱（建议定期导出备份）
-- ⚠️ 数据仅存储在当前浏览器中（使用导入/导出功能在设备间同步）
-
-## 开发
-
-### 项目结构
-
-```
-src/
-├── components/         # React 组件
-│   └── RecipeForm.tsx # 食谱表单组件
-├── routes/            # 路由页面
-│   ├── __root.tsx     # 根路由
-│   ├── index.tsx      # 首页（食谱列表）
-│   ├── new.tsx        # 新建食谱
-│   ├── edit.$recipeId.tsx    # 编辑食谱
-│   └── recipes.$recipeId.tsx # 食谱详情
-├── services/          # 业务逻辑
-│   └── recipeService.ts # 食谱 CRUD 操作
-├── types/             # TypeScript 类型定义
-│   └── recipe.ts      # 食谱相关类型
-└── index.css          # 全局样式
-```
+- 食谱管理 (CRUD)
+- 冰箱食材管理
+- AI 智能推荐
+- 多人实时协作
+- 跨平台支持 (Web/Mobile)
 
 ## 许可证
 
-MIT License
-
-## 贡献
-
-欢迎提交 Issue 和 Pull Request！
+MIT

@@ -1,0 +1,25 @@
+# Smart Kitchen AI Agent - Google ADK
+# https://google.github.io/adk-docs/
+
+# Google ADK
+google-adk>=0.1.0
+
+# Web Framework
+fastapi==0.115.0
+uvicorn[standard]==0.32.0
+
+# Database
+psycopg2-binary==2.9.10
+asyncpg==0.30.0
+
+# Redis
+redis==5.2.0
+
+# Google AI
+google-generativeai==0.8.0
+
+# Utilities
+pydantic==2.10.0
+pydantic-settings==2.6.0
+python-dotenv==1.0.1
+httpx==0.28.0
