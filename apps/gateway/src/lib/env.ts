@@ -7,13 +7,11 @@ const envSchema = z.object({
   PORT: z.string().default('3000'),
 
   // 数据库
-  DATABASE_URL: z.string().optional(),
+  DATABASE_URL: z.string().default('postgresql://admin:password@localhost:5432/kitchen_db'),
 
-  // Redis
-  REDIS_URL: z.string().optional(),
-
-  // 认证
-  BETTER_AUTH_SECRET: z.string().optional(),
+  // Better Auth
+  BETTER_AUTH_SECRET: z.string().default('dev-secret-change-in-production'),
+  BETTER_AUTH_URL: z.string().default('http://localhost:3000'),
 
   // 后端服务地址
   CORE_JAVA_URL: z.string().default('http://localhost:8080'),

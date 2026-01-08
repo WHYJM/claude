@@ -79,6 +79,66 @@ smart-kitchen/
 | 缓存 | Redis | Session、Pub/Sub |
 | 构建 | Turborepo | Monorepo 构建加速 |
 | 包管理 | pnpm | 高效依赖管理 |
+| 认证 | Better Auth | 现代 TypeScript 认证库 |
+
+---
+
+## 认证系统 (Better Auth)
+
+Gateway 使用 [Better Auth](https://www.better-auth.com/) 处理用户认证。
+
+### 认证端点
+
+| 端点 | 方法 | 说明 |
+|------|------|------|
+| `/api/auth/sign-up/email` | POST | 邮箱注册 |
+| `/api/auth/sign-in/email` | POST | 邮箱登录 |
+| `/api/auth/sign-out` | POST | 登出 |
+| `/api/auth/session` | GET | 获取会话 |
+| `/api/auth/me` | GET | 获取当前用户 |
+
+### 使用示例
+
+```typescript
+// 注册
+await fetch('/api/auth/sign-up/email', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    email: 'user@example.com',
+    password: 'password123',
+    name: 'User Name',
+  }),
+  credentials: 'include',
+});
+
+// 登录
+await fetch('/api/auth/sign-in/email', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    email: 'user@example.com',
+    password: 'password123',
+  }),
+  credentials: 'include',
+});
+
+// 获取当前用户
+const res = await fetch('/api/auth/me', { credentials: 'include' });
+const { user } = await res.json();
+```
+
+### 保护路由
+
+```typescript
+import { requireAuth } from './middleware/auth';
+
+// 需要登录的路由
+app.get('/api/protected', requireAuth, (c) => {
+  const user = c.get('user');
+  return c.json({ message: `Hello ${user.name}` });
+});
+```
 
 ---
 
@@ -364,7 +424,7 @@ pnpm dev:web                         # 宿主机运行前端
 ## 下一步
 
 1. 阅读 [fullstack-architecture-plan.md](./fullstack-architecture-plan.md) 了解完整架构设计
-2. 实现 Gateway 的 Better-Auth 认证
+2. ~~实现 Gateway 的 Better-Auth 认证~~ ✅ 已完成
 3. 完善 Core Java 的业务逻辑
 4. 实现 AI Agent 的真实推荐功能
 5. 完成 Mobile 应用开发
