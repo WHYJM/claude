@@ -172,6 +172,37 @@ docker compose up postgres redis -d
 - 使用桶导出 (`index.ts`) 实现清晰的导入
 - 服务代码在 `src/services/`，路由在 `src/routes/`，类型在 `src/types/`
 
+## 分形文档协议 (Fractal Docs Protocol)
+
+本项目使用分形文档结构，确保代码库可读性和可维护性。
+
+### 核心规则
+
+1. **每个文件夹必须有 `.folder.md`**
+   - 包含 3 行架构描述（职责/边界/不变量）
+   - 列出文件夹内所有文件及其功能
+   - 中英双语
+
+2. **每个源文件必须有 3 行头注释**
+   ```
+   // [IN]: 依赖/输入 / Dependencies
+   // [OUT]: 导出/输出 / Exports
+   // [POS]: 定位/职责 / Position in system
+   // Protocol: When updating me, sync this header + parent folder's .folder.md
+   ```
+
+3. **同步更新规则**
+   - 修改文件时 → 更新该文件的头注释
+   - 添加/删除/移动文件时 → 更新所属文件夹的 `.folder.md`
+   - 模块边界变化时 → 更新 `README.md`
+
+### 任务完成检查清单
+
+- [ ] 修改的文件：头注释 `[IN]/[OUT]/[POS]` 是否更新？
+- [ ] 受影响的文件夹：`.folder.md` 文件列表是否准确？
+- [ ] 是否有文件添加/删除/移动？对应 `.folder.md` 是否同步？
+- [ ] 模块边界是否变化？`README.md` 是否需要更新？
+
 ## 代码库使用指南
 
 ### 添加新功能时
@@ -277,6 +308,7 @@ pnpm install
 - ✅ Better Auth 集成完成
 - ✅ Google ADK 框架已集成
 - ✅ 登录 UI 已实现
+- ✅ 分形文档结构已初始化 (32 个 `.folder.md` + 源文件头注释)
 - 🚧 核心功能开发中
 - 🚧 AI Agent 能力扩展中
 

@@ -1,3 +1,9 @@
+// [IN]: React hooks, authService, types/auth / React 钩子、authService、认证类型
+// [OUT]: useAuth() hook - auth state, signIn, signUp, signOut, refreshAuth / useAuth() 钩子 - 认证状态和操作
+// [POS]: State management layer, provides global auth state to components / 状态管理层，为组件提供全局认证状态
+// Protocol: When updating me, sync this header + parent folder's .folder.md
+// 协议：更新本文件时，同步更新此头注释及所属文件夹的 .folder.md
+
 // ============================================
 // Smart Kitchen - 认证状态 Hook
 // ============================================

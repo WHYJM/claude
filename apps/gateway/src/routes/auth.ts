@@ -1,3 +1,9 @@
+// [IN]: Hono, lib/auth (Better Auth instance) / Hono 框架、lib/auth（Better Auth 实例）
+// [OUT]: authRoutes - Hono routes for /api/auth/* / authRoutes - /api/auth/* 的 Hono 路由
+// [POS]: Auth route handler, delegates to Better Auth for session management / 认证路由处理器，委托 Better Auth 管理会话
+// Protocol: When updating me, sync this header + parent folder's .folder.md
+// 协议：更新本文件时，同步更新此头注释及所属文件夹的 .folder.md
+
 /**
  * 认证路由 - Better Auth
  * https://www.better-auth.com/docs

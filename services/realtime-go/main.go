@@ -1,3 +1,9 @@
+// [IN]: Gin framework, gorilla/websocket / Gin 框架、gorilla/websocket
+// [OUT]: HTTP/WebSocket server on port 8081 / HTTP/WebSocket 服务器（端口 8081）
+// [POS]: Realtime service entry, handles WebSocket connections for collaboration / 实时服务入口，处理协作 WebSocket 连接
+// Protocol: When updating me, sync this header + parent folder's .folder.md
+// 协议：更新本文件时，同步更新此头注释及所属文件夹的 .folder.md
+
 package main
 
 import (

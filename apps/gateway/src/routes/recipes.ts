@@ -1,3 +1,9 @@
+// [IN]: Hono framework, (TODO: core-java service, ai-agent service) / Hono 框架、（待办：core-java、ai-agent 服务）
+// [OUT]: recipeRoutes - Hono routes for /api/recipes CRUD / recipeRoutes - 食谱 CRUD 路由
+// [POS]: Recipe API proxy, forwards requests to core-java and ai-agent / 食谱 API 代理，转发请求到后端服务
+// Protocol: When updating me, sync this header + parent folder's .folder.md
+// 协议：更新本文件时，同步更新此头注释及所属文件夹的 .folder.md
+
 import { Hono } from 'hono';
 
 export const recipeRoutes = new Hono();

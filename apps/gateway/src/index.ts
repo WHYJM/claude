@@ -1,3 +1,9 @@
+// [IN]: Hono framework, routes/*, middleware/*, CORS, logger / Hono 框架、路由、中间件、CORS、日志
+// [OUT]: HTTP server on port 3001, exports Hono app / HTTP 服务器（端口 3001），导出 Hono 应用
+// [POS]: Gateway entry point, orchestrates all routes and middleware / 网关入口，编排所有路由和中间件
+// Protocol: When updating me, sync this header + parent folder's .folder.md
+// 协议：更新本文件时，同步更新此头注释及所属文件夹的 .folder.md
+
 /**
  * Smart Kitchen Gateway
  * ======================

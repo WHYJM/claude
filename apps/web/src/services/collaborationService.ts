@@ -1,3 +1,9 @@
+// [IN]: loro-crdt (CRDT), WebRTC APIs, types/recipe / loro-crdt（CRDT）、WebRTC API、食谱类型
+// [OUT]: collaborationService singleton - P2P room management, CRDT sync / collaborationService 单例 - P2P 房间管理、CRDT 同步
+// [POS]: Service layer, manages real-time collaboration via WebRTC and CRDT / 服务层，通过 WebRTC 和 CRDT 管理实时协作
+// Protocol: When updating me, sync this header + parent folder's .folder.md
+// 协议：更新本文件时，同步更新此头注释及所属文件夹的 .folder.md
+
 import { LoroDoc, LoroMap } from 'loro-crdt';
 import type { Recipe, FridgeItem } from '../types/recipe';
 

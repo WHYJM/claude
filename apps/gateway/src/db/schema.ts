@@ -1,3 +1,9 @@
+// [IN]: drizzle-orm/pg-core (table builders) / drizzle-orm/pg-core（表构建器）
+// [OUT]: Table definitions (users, sessions, projects, recipes, etc.), entity types / 表定义、实体类型
+// [POS]: Database schema definition, used by Drizzle ORM and Better Auth / 数据库 schema 定义，被 Drizzle ORM 和 Better Auth 使用
+// Protocol: When updating me, sync this header + parent folder's .folder.md
+// 协议：更新本文件时，同步更新此头注释及所属文件夹的 .folder.md
+
 /**
  * 数据库 Schema - Better Auth + 业务表
  */

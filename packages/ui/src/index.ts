@@ -1,3 +1,9 @@
+// [IN]: React (future: cross-platform UI libs) / React（未来：跨平台 UI 库）
+// [OUT]: UI_VERSION constant, (future: shared components) / UI 版本常量、（未来：共享组件）
+// [POS]: UI component library, provides cross-platform components for apps / UI 组件库，为应用提供跨平台组件
+// Protocol: When updating me, sync this header + parent folder's .folder.md
+// 协议：更新本文件时，同步更新此头注释及所属文件夹的 .folder.md
+
 // ============================================
 // Smart Kitchen - 共享 UI 组件
 // ============================================

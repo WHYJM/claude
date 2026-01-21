@@ -1,3 +1,9 @@
+// [IN]: types/recipe (AppSettings), localStorage / 应用设置类型、本地存储
+// [OUT]: settingsService object - get/save settings, API key management / settingsService 对象 - 设置管理、API Key 管理
+// [POS]: Service layer, manages user settings persistence in localStorage / 服务层，管理用户设置在本地存储中的持久化
+// Protocol: When updating me, sync this header + parent folder's .folder.md
+// 协议：更新本文件时，同步更新此头注释及所属文件夹的 .folder.md
+
 import type { AppSettings } from '../types/recipe';
 
 const STORAGE_KEY = 'family-recipe-settings';

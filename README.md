@@ -110,6 +110,12 @@ pnpm docker:logs      # 查看日志
 - [完整架构设计](./docs/fullstack-architecture-plan.md)
 - [Monorepo 开发指南](./docs/monorepo-guide.md)
 
+### 代码导航 / Code Navigation
+
+每个文件夹包含 `.folder.md` 文件描述其职责和文件列表。每个源文件包含 `[IN]/[OUT]/[POS]` 头注释说明其依赖、导出和定位。
+
+Each folder contains a `.folder.md` file describing its responsibilities and file list. Each source file has `[IN]/[OUT]/[POS]` header comments explaining its dependencies, exports, and position.
+
 ## 功能特性
 
 - 食谱管理 (CRUD)

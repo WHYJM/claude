@@ -1,3 +1,9 @@
+// [IN]: Hono framework / Hono 框架
+// [OUT]: healthRoutes - Hono routes for /health, /health/ready, /health/live / healthRoutes - 健康检查路由
+// [POS]: Health check endpoints for container orchestration (K8s/Docker) / 容器编排健康检查端点
+// Protocol: When updating me, sync this header + parent folder's .folder.md
+// 协议：更新本文件时，同步更新此头注释及所属文件夹的 .folder.md
+
 import { Hono } from 'hono';
 
 export const healthRoutes = new Hono();

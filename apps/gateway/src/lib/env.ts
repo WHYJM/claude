@@ -1,3 +1,9 @@
+// [IN]: zod, process.env / zod 验证库、环境变量
+// [OUT]: env object (validated), Env type / env 对象（已验证）、Env 类型
+// [POS]: Environment configuration, validates env vars at startup / 环境配置，启动时验证环境变量
+// Protocol: When updating me, sync this header + parent folder's .folder.md
+// 协议：更新本文件时，同步更新此头注释及所属文件夹的 .folder.md
+
 import { z } from 'zod';
 
 // 环境变量 Schema

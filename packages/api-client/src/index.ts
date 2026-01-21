@@ -1,3 +1,9 @@
+// [IN]: @smart-kitchen/shared-types, fetch API / 共享类型、fetch API
+// [OUT]: createApiClient(), api instance, ApiClient type / API 客户端工厂和默认实例
+// [POS]: API abstraction layer, provides type-safe HTTP client for apps / API 抽象层，为应用提供类型安全的 HTTP 客户端
+// Protocol: When updating me, sync this header + parent folder's .folder.md
+// 协议：更新本文件时，同步更新此头注释及所属文件夹的 .folder.md
+
 // ============================================
 // Smart Kitchen - API 客户端
 // ============================================

@@ -1,3 +1,9 @@
+// [IN]: types/recipe (Project types), uuid, localStorage / 项目类型、uuid、本地存储
+// [OUT]: projectService object - CRUD, join collaborative, filter methods / projectService 对象 - 项目 CRUD 和协作方法
+// [POS]: Service layer, manages project data persistence in localStorage / 服务层，管理项目数据在本地存储中的持久化
+// Protocol: When updating me, sync this header + parent folder's .folder.md
+// 协议：更新本文件时，同步更新此头注释及所属文件夹的 .folder.md
+
 import type { Project, ProjectType } from '../types/recipe';
 import { v4 as uuidv4 } from 'uuid';
 

@@ -1,3 +1,9 @@
+// [IN]: better-auth, drizzle adapter, db/schema / better-auth、drizzle 适配器、db/schema
+// [OUT]: auth instance, Auth/Session/User types / auth 实例、Auth/Session/User 类型
+// [POS]: Better Auth configuration, provides auth instance for routes and middleware / Better Auth 配置，为路由和中间件提供认证实例
+// Protocol: When updating me, sync this header + parent folder's .folder.md
+// 协议：更新本文件时，同步更新此头注释及所属文件夹的 .folder.md
+
 /**
  * Better Auth 配置
  * https://www.better-auth.com/docs

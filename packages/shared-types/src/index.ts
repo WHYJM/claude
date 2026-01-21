@@ -1,3 +1,9 @@
+// [IN]: None (pure type definitions) / 无（纯类型定义）
+// [OUT]: All shared domain types (Recipe, FridgeItem, User, Project, etc.) / 所有共享领域类型
+// [POS]: Type foundation layer, consumed by all apps and packages / 类型基础层，被所有应用和包消费
+// Protocol: When updating me, sync this header + parent folder's .folder.md
+// 协议：更新本文件时，同步更新此头注释及所属文件夹的 .folder.md
+
 // ============================================
 // Smart Kitchen - 共享类型定义
 // ============================================

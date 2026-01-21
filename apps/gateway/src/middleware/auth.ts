@@ -1,3 +1,9 @@
+// [IN]: Hono Context/Next, lib/auth (Better Auth) / Hono Context/Next、lib/auth（Better Auth）
+// [OUT]: authMiddleware, requireAuth, getUser, getSession / 认证中间件函数和辅助函数
+// [POS]: Request interceptor for session validation, sets user context / 请求拦截器，验证会话并设置用户上下文
+// Protocol: When updating me, sync this header + parent folder's .folder.md
+// 协议：更新本文件时，同步更新此头注释及所属文件夹的 .folder.md
+
 /**
  * 认证中间件
  */

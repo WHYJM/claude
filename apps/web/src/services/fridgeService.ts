@@ -1,3 +1,9 @@
+// [IN]: types/recipe (FridgeItem), uuid, localStorage / 冰箱物品类型、uuid、本地存储
+// [OUT]: fridgeService object - CRUD, filter, import/export, sync methods / fridgeService 对象 - 冰箱物品 CRUD、过滤、导入导出方法
+// [POS]: Service layer, manages fridge inventory data persistence / 服务层，管理冰箱库存数据持久化
+// Protocol: When updating me, sync this header + parent folder's .folder.md
+// 协议：更新本文件时，同步更新此头注释及所属文件夹的 .folder.md
+
 import type { FridgeItem, FridgeCategory } from '../types/recipe';
 import { v4 as uuidv4 } from 'uuid';
 

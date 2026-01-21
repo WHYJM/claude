@@ -1,3 +1,9 @@
+// [IN]: drizzle-orm, postgres.js, db/schema / drizzle-orm、postgres.js、db/schema
+// [OUT]: db instance (Drizzle client), Database type / db 实例（Drizzle 客户端）、Database 类型
+// [POS]: Database connection layer, provides typed query interface / 数据库连接层，提供类型化查询接口
+// Protocol: When updating me, sync this header + parent folder's .folder.md
+// 协议：更新本文件时，同步更新此头注释及所属文件夹的 .folder.md
+
 /**
  * 数据库连接
  */

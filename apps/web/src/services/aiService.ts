@@ -1,3 +1,9 @@
+// [IN]: types/recipe, settingsService, Gemini API / 食谱类型、设置服务、Gemini API
+// [OUT]: aiService object - callGemini, recommendRecipes, generateRecipe, checkIngredients / aiService 对象 - AI 推荐方法
+// [POS]: Service layer, handles AI-powered recipe recommendations via Gemini 2.0 / 服务层，通过 Gemini 2.0 处理 AI 食谱推荐
+// Protocol: When updating me, sync this header + parent folder's .folder.md
+// 协议：更新本文件时，同步更新此头注释及所属文件夹的 .folder.md
+
 import type { AIGeneratedRecipe, FridgeItem } from '../types/recipe';
 import { settingsService } from './settingsService';
 

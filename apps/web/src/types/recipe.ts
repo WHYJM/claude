@@ -1,3 +1,9 @@
+// [IN]: None (pure type definitions) / 无（纯类型定义）
+// [OUT]: Recipe, Ingredient, FridgeItem, Project, and related domain types / 食谱、食材、冰箱物品、项目等领域类型
+// [POS]: Type layer, defines core business domain types / 类型层，定义核心业务领域类型
+// Protocol: When updating me, sync this header + parent folder's .folder.md
+// 协议：更新本文件时，同步更新此头注释及所属文件夹的 .folder.md
+
 export interface Ingredient {
   id: string;
   name: string;

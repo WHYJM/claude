@@ -1,3 +1,9 @@
+// [IN]: types/recipe, uuid, localStorage / 食谱类型、uuid、本地存储
+// [OUT]: recipeService object - CRUD, search, import/export, sync methods / recipeService 对象 - CRUD、搜索、导入导出、同步方法
+// [POS]: Service layer, manages recipe data persistence in localStorage / 服务层，管理食谱数据在本地存储中的持久化
+// Protocol: When updating me, sync this header + parent folder's .folder.md
+// 协议：更新本文件时，同步更新此头注释及所属文件夹的 .folder.md
+
 import type { Recipe, RecipeFormData } from '../types/recipe';
 import { v4 as uuidv4 } from 'uuid';
 

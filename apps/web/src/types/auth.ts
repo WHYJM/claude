@@ -1,3 +1,9 @@
+// [IN]: None (pure type definitions) / 无（纯类型定义）
+// [OUT]: User, AuthState, SignInRequest, SignUpRequest, AuthMeResponse, AuthResult / 认证相关类型定义
+// [POS]: Type layer, defines auth domain types used by hooks and services / 类型层，定义钩子和服务使用的认证领域类型
+// Protocol: When updating me, sync this header + parent folder's .folder.md
+// 协议：更新本文件时，同步更新此头注释及所属文件夹的 .folder.md
+
 // ============================================
 // Smart Kitchen - 认证相关类型定义
 // ============================================

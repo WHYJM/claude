@@ -1,3 +1,9 @@
+// [IN]: React useEffect, DOM APIs (visualViewport, focus events) / React useEffect、DOM API
+// [OUT]: useKeyboardAdjustment(), useVisualViewport() hooks / 键盘调整和视口变化钩子
+// [POS]: UI utility layer, handles mobile keyboard visibility for inputs / UI 工具层，处理移动端键盘对输入框的影响
+// Protocol: When updating me, sync this header + parent folder's .folder.md
+// 协议：更新本文件时，同步更新此头注释及所属文件夹的 .folder.md
+
 import { useEffect } from 'react';
 
 /**
