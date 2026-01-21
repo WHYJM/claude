@@ -7,12 +7,14 @@ FROM golang:1.22-alpine AS builder
 
 WORKDIR /app
 
-# 安装依赖
+# 复制源代码和依赖文件
 COPY go.mod go.sum* ./
-RUN go mod download
+COPY . .
+
+# 下载依赖（如果没有 go.sum 则自动生成）
+RUN go mod tidy
 
 # 构建
-COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
 # Stage 2: 运行 (极小镜像)
