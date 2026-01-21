@@ -30,22 +30,18 @@ const app = new Hono();
 // 日志
 app.use('*', logger());
 
-// 安全头
-app.use('*', secureHeaders());
-
 // JSON 美化 (开发环境)
 if (process.env.NODE_ENV !== 'production') {
   app.use('*', prettyJSON());
 }
 
-// CORS
+// CORS (必须在 secureHeaders 之前，以正确处理 OPTIONS 预检请求)
 app.use(
   '*',
   cors({
     origin: [
       'http://localhost:5173',  // Web dev
-      'http://localhost:3000',  // Gateway
-      'http://localhost:3001',  // 其他
+      'http://localhost:3001',  // Gateway
     ],
     credentials: true,
     allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -53,6 +49,9 @@ app.use(
     exposeHeaders: ['Set-Cookie'],
   })
 );
+
+// 安全头 (放在 CORS 之后)
+app.use('*', secureHeaders());
 
 // 认证中间件 (所有请求都会解析用户信息)
 app.use('*', authMiddleware);
@@ -118,7 +117,7 @@ app.onError((err, c) => {
 // 启动服务器
 // ============================================
 
-const port = Number(process.env.PORT) || 3000;
+const port = Number(process.env.GATEWAY_PORT) || Number(process.env.PORT) || 3001;
 
 console.log('🚀 Smart Kitchen Gateway');
 console.log('========================');

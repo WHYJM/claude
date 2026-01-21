@@ -16,14 +16,8 @@ import { auth } from '../lib/auth';
 
 export const authRoutes = new Hono();
 
-// Better Auth 处理所有 /api/auth/* 请求
-// 这会自动提供 sign-up, sign-in, sign-out, session 等端点
-authRoutes.on(['GET', 'POST'], '/*', (c) => {
-  return auth.handler(c.req.raw);
-});
-
 // ============================================
-// 额外的辅助端点
+// 额外的辅助端点 (必须在通配符路由之前定义)
 // ============================================
 
 // 获取当前用户信息 (前端友好的简化版)
@@ -55,4 +49,14 @@ authRoutes.get('/me', async (c) => {
     console.error('Auth error:', error);
     return c.json({ authenticated: false, user: null }, 200);
   }
+});
+
+// ============================================
+// Better Auth 通配符路由 (必须在自定义端点之后)
+// ============================================
+
+// Better Auth 处理所有其他 /api/auth/* 请求
+// 这会自动提供 sign-up, sign-in, sign-out, session 等端点
+authRoutes.on(['GET', 'POST'], '/*', (c) => {
+  return auth.handler(c.req.raw);
 });

@@ -9,6 +9,13 @@ import { db } from '../db';
 import * as schema from '../db/schema';
 
 export const auth = betterAuth({
+  // 基础 URL 和信任域配置
+  baseURL: process.env.BETTER_AUTH_URL || 'http://localhost:3001',
+  trustedOrigins: [
+    'http://localhost:5173',  // Web 前端
+    'http://localhost:3001',  // Gateway 自身
+  ],
+
   // 数据库适配器
   database: drizzleAdapter(db, {
     provider: 'pg',
