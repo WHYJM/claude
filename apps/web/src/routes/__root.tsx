@@ -1,12 +1,15 @@
 import { createRootRoute, Link, Outlet } from '@tanstack/react-router';
-import { TanStackRouterDevtools } from '@tanstack/router-devtools';
+import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { Button } from '@/components/ui/button';
 import { useKeyboardAdjustment, useVisualViewport } from '@/hooks/useKeyboard';
+import { useAuth } from '@/hooks/useAuth';
 
 function RootComponent() {
   // Handle keyboard adjustments for mobile
   useKeyboardAdjustment();
   useVisualViewport();
+
+  const { isAuthenticated, user, isLoading, signOut } = useAuth();
 
   return (
     <div className="min-h-screen bg-background">
@@ -27,6 +30,22 @@ function RootComponent() {
                 设置
               </Link>
             </Button>
+
+            {/* 认证区域 */}
+            {isLoading ? (
+              <span className="text-sm text-muted-foreground">...</span>
+            ) : isAuthenticated && user ? (
+              <div className="flex items-center gap-2 ml-2">
+                <span className="text-sm text-muted-foreground">{user.name}</span>
+                <Button variant="outline" size="sm" onClick={signOut}>
+                  登出
+                </Button>
+              </div>
+            ) : (
+              <Button variant="default" size="sm" asChild className="ml-2">
+                <Link to="/login">登录</Link>
+              </Button>
+            )}
           </div>
         </div>
       </nav>

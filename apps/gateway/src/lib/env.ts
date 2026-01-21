@@ -4,14 +4,14 @@ import { z } from 'zod';
 const envSchema = z.object({
   // 服务配置
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
-  PORT: z.string().default('3000'),
+  PORT: z.string().default('3001'),
 
   // 数据库
   DATABASE_URL: z.string().default('postgresql://admin:password@localhost:5432/kitchen_db'),
 
   // Better Auth
   BETTER_AUTH_SECRET: z.string().default('dev-secret-change-in-production'),
-  BETTER_AUTH_URL: z.string().default('http://localhost:3000'),
+  BETTER_AUTH_URL: z.string().default('http://localhost:3001'),
 
   // 后端服务地址
   CORE_JAVA_URL: z.string().default('http://localhost:8080'),
